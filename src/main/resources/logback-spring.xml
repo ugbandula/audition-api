@@ -65,7 +65,7 @@
   <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${springAppName}"/>
 
   <!-- Appender to log to file in a JSON format -->
-  <root level="DEBUG">
+  <root level="INFO">
     <appender-ref ref="console"/>
     <!-- uncomment this to have also JSON logs -->
     <!--<appender-ref ref="logstash"/>-->
