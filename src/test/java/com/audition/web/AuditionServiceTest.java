@@ -12,12 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = AuditionService.class)
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +56,7 @@ public class AuditionServiceTest {
 
     @Test
     public void testGetCommentsForPostUsingPathParam() {
+        final String postId = "1";
         AuditionPostComment auditionPostComment1 = new AuditionPostComment();
         auditionPostComment1.setId(1);
         auditionPostComment1.setEmail("test1@test.com");
@@ -74,9 +73,9 @@ public class AuditionServiceTest {
         postCommentsList.add(auditionPostComment1);
         postCommentsList.add(auditionPostComment2);
 
-        when(integrationClient.getCommentsForPostUsingPathParam(1+"")).thenReturn(postCommentsList);
+        when(integrationClient.getCommentsForPostUsingPathParam(postId)).thenReturn(postCommentsList);
 
-        List<AuditionPostComment> postComments = auditionService.getPostCommentsUsingPostId(1+"");
+        List<AuditionPostComment> postComments = auditionService.getPostCommentsUsingPostId(postId);
 
         // Assert
         Assertions.assertNotEquals(Collections.EMPTY_LIST, postComments);
@@ -85,6 +84,7 @@ public class AuditionServiceTest {
 
     @Test
     public void testGetCommentsForPostUsingRequestParam() {
+        final String postId = "1";
         AuditionPostComment auditionPostComment1 = new AuditionPostComment();
         auditionPostComment1.setId(1);
         auditionPostComment1.setEmail("test1@test.com");
@@ -101,9 +101,9 @@ public class AuditionServiceTest {
         postCommentsList.add(auditionPostComment1);
         postCommentsList.add(auditionPostComment2);
 
-        when(integrationClient.getCommentsForPostUsingRequestParam(1+"")).thenReturn(postCommentsList);
+        when(integrationClient.getCommentsForPostUsingRequestParam(postId)).thenReturn(postCommentsList);
 
-        List<AuditionPostComment> postComments = auditionService.getCommentsForPostId(1+"");
+        List<AuditionPostComment> postComments = auditionService.getCommentsForPostId(postId);
 
         // Assert
         Assertions.assertNotEquals(Collections.EMPTY_LIST, postComments);

@@ -16,8 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest(classes = AuditionController.class)
 @AutoConfigureMockMvc
@@ -34,11 +36,11 @@ public class AuditionControllerTest {
 
     @Test
     public void testGetPostById404NotFound() throws Exception {
-        Integer postId = 100000;
-        String requestURI = PATH_POSTS_END_POINT + "/" + postId;
+        String postIdStr = "100000";
         String title = "Test post title";
+        final String requestURI = PATH_POSTS_END_POINT + "/" + postIdStr;
 
-        Mockito.when(auditionService.getPostById(postId+"")).thenThrow(SystemException.class);
+        Mockito.when(auditionService.getPostById(postIdStr)).thenThrow(SystemException.class);
 
         mockMvc.perform(get(requestURI))
             .andExpect(status().isNotFound())
@@ -47,9 +49,10 @@ public class AuditionControllerTest {
 
     @Test
     public void testGetPostById200OK() throws Exception {
-        Integer postId = 1;
-        String requestURI = PATH_POSTS_END_POINT + "/" + postId;
-        String title = "Test post title";
+        final Integer postId = 1;
+        final String postIdStr = "1";
+        final String title = "Test post title";
+        final String requestURI = PATH_POSTS_END_POINT + "/" + postIdStr;
 
         AuditionPost auditionPost = new AuditionPost();
         auditionPost.setId(postId);
@@ -57,7 +60,7 @@ public class AuditionControllerTest {
         auditionPost.setBody("Sample post message body");
         auditionPost.setUserId(1);
 
-        Mockito.when(auditionService.getPostById(postId+"")).thenReturn(auditionPost);
+        Mockito.when(auditionService.getPostById(postIdStr)).thenReturn(auditionPost);
 
         mockMvc.perform(get(requestURI))
             .andExpect(status().isOk())
@@ -68,9 +71,10 @@ public class AuditionControllerTest {
 
     @Test
     public void testGetCommentsByPostIdAsPathParam200OK() throws Exception {
-        Integer postId = 1;
-        String requestURI = PATH_POSTS_END_POINT + "/" + postId + "/comments";
-        String title = "Test comment";
+        final Integer postId = 1;
+        final String postIdStr = "1";
+        final String title = "Test comment";
+        final String requestURI = PATH_POSTS_END_POINT + "/" + postId + "/comments";
 
         AuditionPostComment auditionPostComment1 = new AuditionPostComment();
         auditionPostComment1.setId(postId);
@@ -88,21 +92,22 @@ public class AuditionControllerTest {
         commentsList.add(auditionPostComment1);
         commentsList.add(auditionPostComment2);
 
-        Mockito.when(auditionService.getPostCommentsUsingPostId(postId+"")).thenReturn(commentsList);
+        Mockito.when(auditionService.getPostCommentsUsingPostId(postIdStr)).thenReturn(commentsList);
 
         mockMvc.perform(get(requestURI))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$[0].email", is("test1@test.com")))
-            .andExpect(jsonPath("$[1].email", is("test1@test.com")))
+            .andExpect(jsonPath("$[1].email", is("test2@test.com")))
             .andDo(print());
     }
 
     @Test
     public void testGetCommentsByPostIdAsRequestParam200OK() throws Exception {
-        Integer postId = 1;
-        String requestURI = PATH_COMMENTS_END_POINT + "?postId=" + postId;
-        String title = "Test comment";
+        final Integer postId = 1;
+        final String postIdStr = "1";
+        final String title = "Test comment";
+        final String requestURI = PATH_COMMENTS_END_POINT + "?postId=" + postId;
 
         AuditionPostComment auditionPostComment1 = new AuditionPostComment();
         auditionPostComment1.setId(postId);
@@ -120,13 +125,13 @@ public class AuditionControllerTest {
         commentsList.add(auditionPostComment1);
         commentsList.add(auditionPostComment2);
 
-        Mockito.when(auditionService.getPostCommentsUsingPostId(postId+"")).thenReturn(commentsList);
+        Mockito.when(auditionService.getPostCommentsUsingPostId(postIdStr)).thenReturn(commentsList);
 
         mockMvc.perform(get(requestURI))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$[0].email", is("test1@test.com")))
-            .andExpect(jsonPath("$[1].email", is("test1@test.com")))
+            .andExpect(jsonPath("$[1].email", is("test2@test.com")))
             .andDo(print());
     }
 

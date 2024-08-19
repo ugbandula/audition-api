@@ -16,14 +16,14 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
     static final String PROCESS = "LoggingRequestInterceptor";
 
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution) throws IOException {
         traceRequest(request, body);
         ClientHttpResponse response = execution.execute(request, body);
         traceResponse(response);
         return response;
     }
 
-    private void traceRequest(HttpRequest request, byte[] body) throws IOException {
+    private void traceRequest(final HttpRequest request, final byte[] body) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("===log request start===");
             log.debug("URI: {}", request.getURI());
@@ -34,7 +34,7 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
         }
     }
 
-    private void traceResponse(ClientHttpResponse response) throws IOException {
+    private void traceResponse(final ClientHttpResponse response) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("===log response start===");
             log.debug("Status code: {}", response.getStatusCode());

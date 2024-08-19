@@ -60,7 +60,7 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
         // TODO use object mapper
         // TODO create a logging interceptor that logs request/response for rest template calls.
 
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+        final List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
         interceptors.add(new LoggingRequestInterceptor());
         restTemplate.setInterceptors(interceptors);
         return restTemplate;
